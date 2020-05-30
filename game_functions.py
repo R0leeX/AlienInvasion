@@ -86,12 +86,14 @@ def fire_bullet(ai_settings, screen, ship, bullets):
 
 def fire_alien_bullet(ai_settings, screen, aliens, alien_bullets):
     """Fire a bullet if limit not reached yet."""
-    alien = random.choice(aliens.sprites())
-    fire_sound = pygame.mixer.Sound("sounds/fire_bullet.wav")
-    pygame.mixer.Sound.play(fire_sound)
-    ai_settings.set_alien_bullets()
-    new_bullet = Bullet(ai_settings, screen, alien)
-    alien_bullets.add(new_bullet)
+    if aliens: 
+        alien = random.choice(aliens.sprites())
+
+        fire_sound = pygame.mixer.Sound("sounds/fire_bullet.wav")
+        pygame.mixer.Sound.play(fire_sound)
+        ai_settings.set_alien_bullets()
+        new_bullet = Bullet(ai_settings, screen, alien)
+        alien_bullets.add(new_bullet)
 
 
 def ship_hit(ai_settings, stats, sb, screen, ship, aliens, bullets, alien_bullets):
@@ -103,8 +105,7 @@ def ship_hit(ai_settings, stats, sb, screen, ship, aliens, bullets, alien_bullet
         # Update scoreboard.
         sb.prep_ships()
 
-        # Empty the list of aliens and bullets.
-        aliens.empty()
+        # Empty the list of bullets.
         bullets.empty()
         alien_bullets.empty()
 
@@ -112,8 +113,6 @@ def ship_hit(ai_settings, stats, sb, screen, ship, aliens, bullets, alien_bullet
         create_fleet(ai_settings, screen, ship, aliens)
         ship.center_ship()
 
-        # Pause.
-        sleep(0.5)
     else:
         stats.game_active = False
         pygame.mouse.set_visible(True)
@@ -127,13 +126,10 @@ def ship_hit_by_bullet(ai_settings, stats, sb, screen, ship, aliens, bullets, al
         # Update scoreboard.
         sb.prep_ships()
 
-        # Empty the list of aliens and bullets.
-        aliens.empty()
+        # Empty the list of bullets.
         bullets.empty()
         alien_bullets.empty()
 
-        # Pause.
-        sleep(0.5)
     else:
         stats.game_active = False
         pygame.mouse.set_visible(True)
