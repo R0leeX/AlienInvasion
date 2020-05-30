@@ -13,13 +13,13 @@ class Scoreboard():
         self.stats = stats
 
         self.font_settings()
-        self.prep_score_images()
+        self.prep_images()
     
     def font_settings(self):
         self.text_color = (241, 245, 12)
         self.font = pygame.font.SysFont(None, 48)
 
-    def prep_score_images(self):
+    def prep_images(self):
         self.prep_score()
         self.prep_high_score()
         self.prep_level()

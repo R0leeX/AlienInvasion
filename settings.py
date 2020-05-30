@@ -30,6 +30,7 @@ class Settings():
         self.score_scale = 1.5
 
         self.initialize_dynamic_settings()
+        self.set_ship_bullets()
 
     def initialize_dynamic_settings(self):
         """Initialize settings that change throughout the game."""
@@ -49,3 +50,10 @@ class Settings():
 
         self.alien_points = int(self.alien_points * self.score_scale)
 
+    def set_alien_bullets(self):
+        self.bullet_color = (252, 3, 3)
+        self.bullet_direction = -1
+    
+    def set_ship_bullets(self):
+        self.bullet_color = (21, 219, 11)
+        self.bullet_direction = 1
