@@ -12,6 +12,6 @@ loses a ship. If the player loses three ships, the game ends.
 
 ## Screenshot
 
-![Image of Menu](https://github.com/R0leeX/AlienInvasion/tree/master/images/menu.PNG)
+![Image of Menu](https://github.com/R0leeX/AlienInvasion/blob/master/menu.PNG)
 
-![Image of GamePlay](https://github.com/R0leeX/AlienInvasion/tree/master/images/game.PNG)
+![Image of GamePlay](https://github.com/R0leeX/AlienInvasion/blob/master/game.PNG)
