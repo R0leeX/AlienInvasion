@@ -23,31 +23,38 @@ class AIPlayer:
             # Still call ai_game._check_events(), so we can use keyboard to
             #   quit.
             self.ai_game._check_events()
+            self._implement_strategy()
 
-            # Sweep the ship right and left continuously.
-            ship = self.ai_game.ship
-            screen_rect = self.ai_game.screen.get_rect()
-
-            if not ship.moving_right and not ship.moving_left:
-                # Ship hasn't started moving yet; move to the right.
-                ship.moving_right = True
-            elif (ship.moving_right
-                        and ship.rect.right > screen_rect.right - 10):
-                # Ship about to hit right edge; move left.
-                ship.moving_right = False
-                ship.moving_left = True
-            elif ship.moving_left and ship.rect.left < 10:
-                ship.moving_left = False
-                ship.moving_right = True
-
-            
             if self.ai_game.stats.game_active:
                 self.ai_game.ship.update()
                 self.ai_game._update_bullets()
                 self.ai_game._update_aliens()
-                self.ai_game._fire_bullet()
 
             self.ai_game._update_screen()
+
+    def _implement_strategy(self):
+        """Implement an automated strategy for playing the game."""
+        self._sweep_right_left()        
+
+        # Fire a bullet whenever possible.
+        self.ai_game._fire_bullet()
+
+    def _sweep_right_left(self):
+        """Sweep the ship right and left continuously."""
+        ship = self.ai_game.ship
+        screen_rect = self.ai_game.screen.get_rect()
+
+        if not ship.moving_right and not ship.moving_left:
+            # Ship hasn't started moving yet; move to the right.
+            ship.moving_right = True
+        elif (ship.moving_right
+                    and ship.rect.right > screen_rect.right - 10):
+            # Ship about to hit right edge; move left.
+            ship.moving_right = False
+            ship.moving_left = True
+        elif ship.moving_left and ship.rect.left < 10:
+            ship.moving_left = False
+            ship.moving_right = True    
 
 if __name__ == '__main__':
     ai_game = AlienInvasion()
