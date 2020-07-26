@@ -1,7 +1,7 @@
 import pygame
 from alien_invasion import AlienInvasion
 from random import random
-
+from button import Button
 
 class AIPlayer:
 
@@ -10,6 +10,7 @@ class AIPlayer:
 
         # Need a reference to the game object.
         self.ai_game = ai_game
+        ai_game.is_ai_player = True
 
     def run_game(self):
         """Replaces the original run_game(), so we can interject our own
@@ -18,10 +19,6 @@ class AIPlayer:
 
         # Start out in an active state.
         self.ai_game.stats.game_active = True
-        pygame.mouse.set_visible(False)
-
-        # Speed up the game for development work.
-        self._modify_speed(5)
 
         # Get the full fleet size.
         self.fleet_size = len(self.ai_game.aliens)
@@ -79,11 +76,6 @@ class AIPlayer:
                 target_alien = alien
 
         return target_alien
-
-    def _modify_speed(self, speed_factor):
-        self.ai_game.settings.ship_speed *= speed_factor
-        self.ai_game.settings.bullet_speed *= speed_factor
-        self.ai_game.settings.alien_speed *= speed_factor
 
 if __name__ == '__main__':
     ai_game = AlienInvasion()

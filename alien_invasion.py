@@ -20,6 +20,7 @@ class AlienInvasion:
         """Initialize the game, and create game resources."""
         pygame.init()
         self.settings = Settings()
+        self.is_ai_player = False
 
         self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         self.settings.screen_width = self.screen.get_rect().width
@@ -40,8 +41,12 @@ class AlienInvasion:
 
         self._create_fleet()
 
-        # Make the Play button.
+        # Make the buttons.
         self.play_button = Button(self, "Play")
+        self.inc_speed_button = Button(self, "+speed")
+        self.inc_speed_button.set_position(0)
+        self.dec_speed_button = Button(self, "-speed")
+        self.dec_speed_button.set_position(55)
 
     def run_game(self):
         """Start the main loop for the game."""
@@ -67,6 +72,21 @@ class AlienInvasion:
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 self._check_play_button(mouse_pos)
+                self._check_speed_buttons(mouse_pos)
+
+    def _check_speed_buttons(self, mouse_pos):
+        speed_inc_clicked = self.inc_speed_button.rect.collidepoint(mouse_pos)
+        speed_dec_clicked = self.dec_speed_button.rect.collidepoint(mouse_pos)
+
+        if speed_inc_clicked:
+            self._modify_speed(2)
+        elif speed_dec_clicked:
+            self._modify_speed(0.5)
+
+    def _modify_speed(self, speed_factor):
+        self.settings.ship_speed *= speed_factor
+        self.settings.bullet_speed *= speed_factor
+        self.settings.alien_speed *= speed_factor
 
     def _check_play_button(self, mouse_pos):
         """Start a new game when the player clicks Play."""
@@ -99,7 +119,7 @@ class AlienInvasion:
             self.ship.moving_right = True
         elif event.key == pygame.K_LEFT:
             self.ship.moving_left = True
-        elif event.key == pygame.K_q:
+        elif event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
             sys.exit()
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
@@ -260,6 +280,10 @@ class AlienInvasion:
         # Draw the play button if the game is inactive.
         if not self.stats.game_active:
             self.play_button.draw_button()
+
+        if self.stats.game_active and self.is_ai_player:
+            self.inc_speed_button.draw_button()
+            self.dec_speed_button.draw_button()
 
         pygame.display.flip()
 
