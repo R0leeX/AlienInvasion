@@ -1,5 +1,7 @@
 import pygame
 from alien_invasion import AlienInvasion
+from random import random
+
 
 class AIPlayer:
 
@@ -21,6 +23,9 @@ class AIPlayer:
         # Speed up the game for development work.
         self._modify_speed(5)
 
+        # Get the full fleet size.
+        self.fleet_size = len(self.ai_game.aliens)
+
         # Start the main loop for the game.
         while True:
             # Still call ai_game._check_events(), so we can use keyboard to
@@ -37,33 +42,49 @@ class AIPlayer:
 
     def _implement_strategy(self):
         """Implement an automated strategy for playing the game."""
-        self._sweep_right_left()        
 
-        # Fire a bullet whenever possible.
-        self.ai_game._fire_bullet()
+        # Get specific alien to chase.
+        target_alien = self._get_target_alien()
 
-    def _sweep_right_left(self):
-        """Sweep the ship right and left continuously."""
+        # Move toward target alien.
         ship = self.ai_game.ship
-        screen_rect = self.ai_game.screen.get_rect()
-
-        if not ship.moving_right and not ship.moving_left:
-            # Ship hasn't started moving yet; move to the right.
+        if ship.rect.x < target_alien.rect.x:
             ship.moving_right = True
-        elif (ship.moving_right
-                    and ship.rect.right > screen_rect.right - 10):
-            # Ship about to hit right edge; move left.
+            ship.moving_left = False
+        elif ship.rect.x > target_alien.rect.x:
             ship.moving_right = False
             ship.moving_left = True
-        elif ship.moving_left and ship.rect.left < 10:
-            ship.moving_left = False
-            ship.moving_right = True   
+
+        # Fire a bullet whenever possible.
+        firing_frequency = 1.0
+        if random() < firing_frequency:
+            self.ai_game._fire_bullet()
+
+    def _get_target_alien(self):
+        """Get a specific alien to target."""
+
+        # Find the right-most alien in the bottom row.
+        #   Pick the first alien in the group. Then compare all others,
+        #   and return the alien with the greatest x and y rect attributes.
+        target_alien = self.ai_game.aliens.sprites()[0]
+        for alien in self.ai_game.aliens.sprites():
+            if alien.rect.y > target_alien.rect.y:
+                # This alien is farther down than target_alien.
+                target_alien = alien
+            elif alien.rect.y < target_alien.rect.y:
+                # This alien is above target_alien.
+                continue
+            elif alien.rect.x > target_alien.rect.x:
+                # This alien is in the same row, but farther right.
+                target_alien = alien
+
+        return target_alien
 
     def _modify_speed(self, speed_factor):
         self.ai_game.settings.ship_speed *= speed_factor
         self.ai_game.settings.bullet_speed *= speed_factor
         self.ai_game.settings.alien_speed *= speed_factor
-        
+
 if __name__ == '__main__':
     ai_game = AlienInvasion()
 
