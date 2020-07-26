@@ -18,6 +18,9 @@ class AIPlayer:
         self.ai_game.stats.game_active = True
         pygame.mouse.set_visible(False)
 
+        # Speed up the game for development work.
+        self._modify_speed(5)
+
         # Start the main loop for the game.
         while True:
             # Still call ai_game._check_events(), so we can use keyboard to
@@ -54,8 +57,13 @@ class AIPlayer:
             ship.moving_left = True
         elif ship.moving_left and ship.rect.left < 10:
             ship.moving_left = False
-            ship.moving_right = True    
+            ship.moving_right = True   
 
+    def _modify_speed(self, speed_factor):
+        self.ai_game.settings.ship_speed *= speed_factor
+        self.ai_game.settings.bullet_speed *= speed_factor
+        self.ai_game.settings.alien_speed *= speed_factor
+        
 if __name__ == '__main__':
     ai_game = AlienInvasion()
 
